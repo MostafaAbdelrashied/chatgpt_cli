@@ -1,5 +1,6 @@
 # ChatGPT CLI
-
+## include gif from local file
+![ChatGPT CLI](demo.gif)
 ## Description
 A Python-based CLI tool for interacting with various OpenAI models using the OpenAI API. The tool allows you to chat with different models, store chat history in a PostgreSQL database, and continue previous conversations using different models.
 

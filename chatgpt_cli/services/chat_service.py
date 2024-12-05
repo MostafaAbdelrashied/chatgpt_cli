@@ -33,7 +33,7 @@ class ChatService:
                     model_name = await self.select_model()
                     await self.continue_chat(user, model_name)
                 elif choice == "3":
-                    print("Goodbye!")
+                    print("\nGoodbye!")
                     break
                 else:
                     print("Invalid choice. Please try again.")
@@ -68,9 +68,9 @@ class ChatService:
         async with get_session() as session:
             chats = await self.chat_repository.get_chats_by_user(session, user.id)
             if not chats:
-                print("No previous chats found.")
+                print("\nNo previous chats found.")
                 return
-            print("Previous chats:")
+            print("\nPrevious chats:")
             for idx, chat in enumerate(chats, 1):
                 print(f"{idx}. Chat ID: {chat.id}, Created At: {chat.created_at}")
             choice = input("Enter the chat number to continue: ").strip()
@@ -85,7 +85,7 @@ class ChatService:
                 print("Please enter a valid number.")
 
     async def chat_loop(self, chat: Chat, model_name: str):
-        print(f"Chatting with model: {model_name}. Type 'exit' to end the chat.")
+        print(f"\nChatting with model: {model_name}. Type 'exit' to end the chat.\n")
         conversation = []
         async with get_session() as session:
             messages = await self.message_repository.get_messages_by_chat(
@@ -96,7 +96,6 @@ class ChatService:
                     {"role": message.sender, "content": message.content}
                 )
                 print(f"{message.sender.capitalize()}: {message.content}")
-        print(f"Chat initiated with model: {model_name}")
         while True:
             user_input = input("You: ").strip()
             if user_input.lower() == "exit":
