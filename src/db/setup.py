@@ -1,5 +1,5 @@
 from src.db.session import engine
-from src.models.base import Base
+from src.models.base_model import Base
 
 
 async def init_db():

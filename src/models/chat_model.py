@@ -3,12 +3,11 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
-from .base import Base
+from .base_model import Base
 
 
 class Chat(Base):
     __tablename__ = "chat"
-
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("user.id"))
     created_at = Column(DateTime, default=datetime.utcnow)

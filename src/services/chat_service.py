@@ -113,6 +113,9 @@ class ChatService:
             conversation.append({"role": "assistant", "content": response_text})
             async with get_session() as session:
                 message = Message(
-                    chat_id=chat.id, sender="assistant", content=response_text
+                    chat_id=chat.id,
+                    sender="assistant",
+                    content=response_text,
+                    model=model_name,
                 )
                 await self.message_repository.create_message(session, message)
