@@ -1,7 +1,4 @@
-from chatgpt_cli.utils.args_parser import parse_args
 from chatgpt_cli.utils.env_vars import check_environment_variables
-
-args = parse_args()
 
 REQUIRED_ENV_VARS = [
     "DATABASE_URL",

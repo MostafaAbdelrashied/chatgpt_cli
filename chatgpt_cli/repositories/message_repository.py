@@ -1,8 +1,9 @@
 from typing import List
 
-from chatgpt_cli.models.message_model import Message
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from chatgpt_cli.models.message_model import Message
 
 
 class MessageRepository:

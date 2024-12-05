@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import List
 
-from chatgpt_cli.schemas.message_schema import MessageRead
 from pydantic import BaseModel
+
+from chatgpt_cli.schemas.message_schema import MessageRead
 
 
 class ChatCreate(BaseModel):

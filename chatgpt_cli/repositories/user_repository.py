@@ -1,8 +1,9 @@
 from typing import Optional
 
-from chatgpt_cli.models.user_model import User
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from chatgpt_cli.models.user_model import User
 
 
 class UserRepository:

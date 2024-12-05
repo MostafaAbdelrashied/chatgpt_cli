@@ -11,6 +11,7 @@ def main():
 
 async def run_chat_application():
     await init_db()
+    print("Database initialized!")
     chat_service = ChatService(parse_args().stream)
     await chat_service.start()
 

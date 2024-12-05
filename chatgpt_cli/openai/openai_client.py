@@ -1,8 +1,8 @@
 from typing import Dict, List
 
-from chatgpt_cli.config import settings
-
 import openai
+
+from chatgpt_cli.utils.config import settings
 
 
 class OpenAIClient:

@@ -1,8 +1,9 @@
 from typing import List, Optional
 
-from chatgpt_cli.models.chat_model import Chat
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from chatgpt_cli.models.chat_model import Chat
 
 
 class ChatRepository:
