@@ -1,6 +1,5 @@
 from typing import Dict, List
 
-from chatgpt_cli.async_tools.async_wrapper import run_in_executor
 from chatgpt_cli.config import settings
 
 import openai
@@ -11,8 +10,7 @@ class OpenAIClient:
         self.stream = stream
         openai.api_key = api_key or settings.OPENAI_API_KEY
 
-    @run_in_executor
-    def list_models(self) -> List[str]:
+    async def list_models(self) -> List[str]:
         try:
             models = openai.OpenAI().models.list().data
             models = [model for model in models if "bain" not in model.owned_by]
@@ -38,8 +36,7 @@ class OpenAIClient:
             print(f"OpenAI API error: {e}")
         return []
 
-    @run_in_executor
-    def get_response_complete(
+    async def get_response_complete(
         self, model_name: str, messages: List[Dict[str, str]]
     ) -> str:
         try:
@@ -54,8 +51,7 @@ class OpenAIClient:
             print(f"OpenAI API error: {e}")
             return ""
 
-    @run_in_executor
-    def get_response_stream(
+    async def get_response_stream(
         self, model_name: str, messages: List[Dict[str, str]]
     ) -> str:
         try:

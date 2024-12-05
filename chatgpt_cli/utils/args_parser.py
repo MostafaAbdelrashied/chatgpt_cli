@@ -11,7 +11,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument(
         "--stream",
-        default=True,
+        default=False,
         action=argparse.BooleanOptionalAction,
         help="Stream the response from the model",
     )
