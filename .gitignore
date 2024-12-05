@@ -92,3 +92,6 @@ venv.bak/
 
 *.csv
 *.png
+
+# Mac
+*.DS_Store

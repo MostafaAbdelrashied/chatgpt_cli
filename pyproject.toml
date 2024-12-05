@@ -1,25 +1,21 @@
 [tool.poetry]
-name = "chatgpt"
+name = "chatgpt_cli"
 version = "0.1.0"
 description = ""
 authors = ["Mostafa Abdelrashied <mostafa.abdelrashied@outlook.de>"]
 readme = "README.md"
 
 [[tool.poetry.packages]]
-include = "src"
+include = "chatgpt_cli"
 from = "."
 
 [tool.poetry.dependencies]
 python = "^3.13"
-loguru = "^0.7.2"
-psycopg2-binary = "^2.9.10"
 pydantic = "^2.10.3"
 sqlmodel = "^0.0.22"
 pydantic-settings = "^2.6.1"
 asyncpg = "^0.30.0"
-greenlet = "^3.1.1"
-idna = "^3.10"
-certifi = "^2024.8.30"
+openai = "^1.57.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -32,5 +28,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-init_app = "src.init_app:main"
-main = "src.main:main"
+init_app = "chatgpt_cli.init_app:main"
+main = "chatgpt_cli.main:main"
