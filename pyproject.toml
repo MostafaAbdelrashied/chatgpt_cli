@@ -29,5 +29,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-init_db = "chatgpt_cli.init_app:main"
 chatgpt_cli = "chatgpt_cli.main:main"

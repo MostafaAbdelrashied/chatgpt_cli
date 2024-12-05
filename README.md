@@ -1,7 +1,7 @@
 # ChatGPT CLI
 
 ## Description
-A Python-based CLI tool for interacting with various OpenAI models.
+A Python-based CLI tool for interacting with various OpenAI models using the OpenAI API. The tool allows you to chat with different models, store chat history in a PostgreSQL database, and continue previous conversations using different models.
 
 ## Installation and Usage
 1. Clone the repository
@@ -16,14 +16,8 @@ DATABASE_URL=
 ```
 4. Run the CLI
 ```bash
-poetry run chatgpt_cli # Run the CLI
+poetry run chatgpt_cli # Run the CLI. Use --no-stream or --stream to disable or enable streaming mode
 ```
-
-## Features
-- Chat with with different OpenAI models
-- Store chat history in a PostgreSQL database
-- Continue previous conversations using different models
-- Scalable and easy to extend with more functionalities
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
