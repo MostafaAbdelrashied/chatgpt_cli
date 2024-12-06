@@ -1,7 +1,11 @@
 from chatgpt_cli.utils.env_vars import check_environment_variables
 
 REQUIRED_ENV_VARS = [
-    "DATABASE_URL",
+    "DB_USER",
+    "DB_PASSWORD",
+    "DB_HOST",
+    "DB_PORT",
+    "DB_NAME",
     "OPENAI_API_KEY",
 ]
 

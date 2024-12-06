@@ -19,7 +19,11 @@ poetry install
 3. Create a `.env` file in the root directory and add the following environment variables:
 ```bash
 OPENAI_API_KEY=
-DATABASE_URL=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+DB_NAME=
 ```
 4. Run the CLI
 ```bash

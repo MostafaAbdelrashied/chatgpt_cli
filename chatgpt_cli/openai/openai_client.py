@@ -1,14 +1,13 @@
+import os
 from typing import Dict, List
 
 import openai
 
-from chatgpt_cli.utils.config import settings
-
 
 class OpenAIClient:
-    def __init__(self, stream: bool, api_key: str = None):
+    def __init__(self, stream: bool):
         self.stream = stream
-        openai.api_key = api_key or settings.OPENAI_API_KEY
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
 
     async def list_models(self) -> List[str]:
         try:
