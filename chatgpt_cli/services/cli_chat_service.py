@@ -1,3 +1,5 @@
+import os
+
 from chatgpt_cli.db.session import get_session
 from chatgpt_cli.models import Chat, Message, User
 from chatgpt_cli.openai.openai_client import OpenAIClient
@@ -5,11 +7,23 @@ from chatgpt_cli.repositories import ChatRepository, MessageRepository, UserRepo
 
 
 class ChatService:
-    def __init__(self, stream: bool):
+    def __init__(self, stream: bool, read_file: str = None):
         self.user_repository = UserRepository()
         self.chat_repository = ChatRepository()
         self.message_repository = MessageRepository()
         self.openai_client = OpenAIClient(stream=stream)
+        self.read_file_content = (
+            self.load_file_content(read_file) if read_file else None
+        )
+
+    def load_file_content(self, file_path: str) -> str:
+        if not file_path:
+            return None
+        if not os.path.exists(file_path):
+            print(f"File not found: {file_path}")
+            return None
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read()
 
     async def start(self):
         print("Welcome to the OpenAI Chat Interface!")
@@ -96,6 +110,19 @@ class ChatService:
                     {"role": message.sender, "content": message.content}
                 )
                 print(f"{message.sender.capitalize()}: {message.content}")
+
+        # If there's file content, add it as a user message at the start
+        if self.read_file_content:
+            conversation.append({"role": "user", "content": self.read_file_content})
+            async with get_session() as session:
+                message = Message(
+                    chat_id=chat.id, sender="user", content=self.read_file_content
+                )
+                await self.message_repository.create_message(session, message)
+            print(f"File content added to chat:\n{self.read_file_content}\n")
+            # Reset file content so it's not added again in the same chat
+            self.read_file_content = None
+
         while True:
             user_input = input("You: ").strip()
             if user_input.lower() == "exit":

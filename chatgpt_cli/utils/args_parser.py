@@ -1,20 +1,15 @@
 import argparse
 
 
-def parse_args() -> argparse.Namespace:
-    """Parse command line arguments.
-
-    Returns:
-        argparse.Namespace: Parsed command line arguments
-    """
-    parser = argparse.ArgumentParser(description="Project description")
-
+def parse_args():
+    parser = argparse.ArgumentParser(description="OpenAI Chat Interface")
     parser.add_argument(
-        "--stream",
-        default=False,
-        action=argparse.BooleanOptionalAction,
-        help="Stream the response from the model",
+        "--stream", action="store_true", help="Stream the responses from the OpenAI API"
     )
-    args, _ = parser.parse_known_args()
-
-    return args
+    parser.add_argument(
+        "-r",
+        "--read_file",
+        type=str,
+        help="Path to a text file to include at the start of the chat",
+    )
+    return parser.parse_args()
