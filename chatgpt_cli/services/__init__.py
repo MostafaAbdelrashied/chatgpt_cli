@@ -1,4 +1,4 @@
-from chatgpt_cli.services.chat_service import ChatService
+from chatgpt_cli.services.cli_chat_service import ChatService
 
 __all__ = [
     "ChatService",
