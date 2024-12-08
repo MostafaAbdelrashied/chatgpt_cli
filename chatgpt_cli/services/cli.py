@@ -7,11 +7,11 @@ from chatgpt_cli.repositories import ChatRepository, MessageRepository, UserRepo
 
 
 class ChatService:
-    def __init__(self, stream: bool, read_file: str = None):
+    def __init__(self, read_file: str = None):
         self.user_repository = UserRepository()
         self.chat_repository = ChatRepository()
         self.message_repository = MessageRepository()
-        self.openai_client = OpenAIClient(stream=stream)
+        self.openai_client = OpenAIClient()
         self.read_file_content = (
             self.load_file_content(read_file) if read_file else None
         )
@@ -42,10 +42,12 @@ class ChatService:
                 choice = input("Select an option: ").strip()
                 if choice == "1":
                     model_name = await self.select_model()
-                    await self.new_chat(user, model_name)
+                    if model_name:
+                        await self.new_chat(user, model_name)
                 elif choice == "2":
                     model_name = await self.select_model()
-                    await self.continue_chat(user, model_name)
+                    if model_name:
+                        await self.continue_chat(user, model_name)
                 elif choice == "3":
                     print("\nGoodbye!")
                     break
@@ -100,7 +102,13 @@ class ChatService:
 
     async def chat_loop(self, chat: Chat, model_name: str):
         print(f"\nChatting with model: {model_name}. Type 'exit' to end the chat.\n")
-        conversation = []
+        conversation = [
+            {
+                "role": "system",
+                "content": "You are a helpful customer support assistant. You can use functions when needed.",
+            }
+        ]
+
         async with get_session() as session:
             messages = await self.message_repository.get_messages_by_chat(
                 session, chat.id
@@ -120,7 +128,6 @@ class ChatService:
                     chat_id=chat.id, sender="user", content=self.read_file_content
                 )
                 await self.message_repository.create_message(session, message)
-            # Reset file content so it's not added again in the same chat
             self.read_file_content = None
 
         while True:
@@ -132,10 +139,11 @@ class ChatService:
             async with get_session() as session:
                 message = Message(chat_id=chat.id, sender="user", content=user_input)
                 await self.message_repository.create_message(session, message)
-            print("Assistant: ", end="", flush=True)
+
             response_text = await self.openai_client.get_response(
                 model_name=model_name, messages=conversation
             )
+            print(f"Assistant: {response_text}", end="\n\n", flush=True)
             conversation.append({"role": "assistant", "content": response_text})
             async with get_session() as session:
                 message = Message(

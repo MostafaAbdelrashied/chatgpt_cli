@@ -12,7 +12,7 @@ def main():
 async def run_chat_application():
     await init_db()
     print("Database initialized!")
-    chat_service = ChatService(parse_args().stream, parse_args().read_file)
+    chat_service = ChatService(parse_args().read_file)
     await chat_service.start()
 
 

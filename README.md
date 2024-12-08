@@ -28,16 +28,14 @@ DB_NAME=
 4. Run the CLI
 ```bash
 poetry run chatgpt_cli
-poetry run chatgpt_cli --stream # by default no stream. Note that some models are not supported in stream mode
-poetry run chatgpt_cli -r big_text.txt
 ```
 
 ## Features
 - [x] Chat with different OpenAI models
 - [x] Store chat history in a PostgreSQL database
 - [x] Continue previous conversations using different models
-- [x] Stream mode for real-time chat
 - [x] Load big text file and chat with the model.
+- [x] Use different tools by utilizing function calling 
  
 
 ## License

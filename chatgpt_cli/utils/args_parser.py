@@ -4,9 +4,6 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="OpenAI Chat Interface")
     parser.add_argument(
-        "--stream", action="store_true", help="Stream the responses from the OpenAI API"
-    )
-    parser.add_argument(
         "-r",
         "--read_file",
         type=str,
