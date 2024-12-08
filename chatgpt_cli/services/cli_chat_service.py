@@ -113,13 +113,13 @@ class ChatService:
 
         # If there's file content, add it as a user message at the start
         if self.read_file_content:
+            print("Adding file content to chat.")
             conversation.append({"role": "user", "content": self.read_file_content})
             async with get_session() as session:
                 message = Message(
                     chat_id=chat.id, sender="user", content=self.read_file_content
                 )
                 await self.message_repository.create_message(session, message)
-            print(f"File content added to chat:\n{self.read_file_content}\n")
             # Reset file content so it's not added again in the same chat
             self.read_file_content = None
 
