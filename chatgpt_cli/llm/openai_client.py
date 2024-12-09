@@ -69,17 +69,19 @@ class OpenAIClient:
         msg = response.choices[0].message
 
         if response.choices[0].finish_reason == "tool_calls":
-            # Model wants to call a function
+            for tool_call in msg.tool_calls:
+                fn_name = tool_call.function.name
+                fn_args = eval(tool_call.function.arguments)
 
-            fn_name = msg.tool_calls[0].function.name
-            fn_args = eval(msg.tool_calls[0].function.arguments)
-
-            tool_response = await self.deal_with_function_call(fn_name, fn_args)
-
-            messages.append(msg)
-            messages.append(
-                {"role": "function", "name": fn_name, "content": str(tool_response)}
-            )
+                tool_response = await self.deal_with_function_call(fn_name, fn_args)
+                messages.append({"role": "assistant", "tool_calls": [tool_call]})
+                messages.append(
+                    {
+                        "role": "tool",
+                        "content": str(tool_response),
+                        "tool_call_id": tool_call.id,
+                    }
+                )
 
             response = await self.call_openai(model_name, messages)
             return response.choices[0].message.content
