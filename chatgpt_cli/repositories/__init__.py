@@ -1,6 +1,6 @@
-from chatgpt_cli.repositories.chat_repository import ChatRepository
-from chatgpt_cli.repositories.message_repository import MessageRepository
-from chatgpt_cli.repositories.user_repository import UserRepository
+from chatgpt_cli.repositories.chat import ChatRepository
+from chatgpt_cli.repositories.message import MessageRepository
+from chatgpt_cli.repositories.user import UserRepository
 
 __all__ = [
     "UserRepository",

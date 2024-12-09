@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from chatgpt_cli.schemas.message_schema import MessageRead
+from chatgpt_cli.schemas.message import MessageRead
 
 
 class ChatCreate(BaseModel):

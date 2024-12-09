@@ -1,6 +1,6 @@
-from chatgpt_cli.schemas.chat_schema import ChatCreate, ChatRead
-from chatgpt_cli.schemas.message_schema import MessageCreate, MessageRead
-from chatgpt_cli.schemas.user_schema import UserCreate, UserRead
+from chatgpt_cli.schemas.chat import ChatCreate, ChatRead
+from chatgpt_cli.schemas.message import MessageCreate, MessageRead
+from chatgpt_cli.schemas.user import UserCreate, UserRead
 
 __all__ = [
     "UserCreate",
