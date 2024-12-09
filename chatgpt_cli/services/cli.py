@@ -10,7 +10,7 @@ class ChatService:
         self.user_repository = UserRepository()
         self.chat_repository = ChatRepository()
         self.message_repository = MessageRepository()
-        self.openai = OpenAIClient(stream)
+        self.client = OpenAIClient(stream)
         self.read_file_content = (
             self.load_file_content(read_file) if read_file else None
         )
@@ -55,7 +55,7 @@ class ChatService:
                 print("Invalid choice. Please try again.")
 
     async def select_model(self):
-        models = await self.openai.list_models()
+        models = await self.client.list_models()
         if not models:
             print("No models available.")
             return None
@@ -66,7 +66,13 @@ class ChatService:
         try:
             model_index = int(choice) - 1
             if 0 <= model_index < len(models):
-                return models[model_index].id
+                model_name = models[model_index].id
+                if ("o1" in model_name) and self.client.stream:
+                    print("+-----------------------------------------------------------------------------------+")
+                    print("+---Streaming is not supported for the o1 models. Switching to non-streaming mode---+")
+                    print("+-----------------------------------------------------------------------------------+")
+                    self.client.stream = False
+                return model_name
             else:
                 print("Invalid selection.")
                 return None
@@ -127,7 +133,7 @@ class ChatService:
             message = Message(chat_id=chat.id, sender="user", content=user_input)
             await self.message_repository.create_message(message)
 
-            response_text = await self.openai.get_response(
+            response_text = await self.client.get_response(
                 model_name=model_name, messages=conversation
             )
             conversation.append({"role": "assistant", "content": response_text})
