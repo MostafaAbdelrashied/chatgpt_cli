@@ -45,7 +45,7 @@ class OpenAIClient:
             return response
 
         response = self.client.chat.completions.create(
-            model=model_name, messages=messages, functions=TOOLS, function_call="auto"
+            model=model_name, messages=messages, tools=TOOLS, tool_choice="auto"
         )
         return response
 
@@ -66,14 +66,13 @@ class OpenAIClient:
         response = await self.call_openai(model_name, messages)
         if "o1" in model_name:
             return response.choices[0].message.content
-        choice = response.choices[0]
-        finish_reason = choice.finish_reason
-        msg = choice.message
+        msg = response.choices[0].message
 
-        if finish_reason == "function_call":
+        if response.choices[0].finish_reason == "tool_calls":
             # Model wants to call a function
-            fn_name = msg.function_call.name
-            fn_args = eval(msg.function_call.arguments)
+
+            fn_name = msg.tool_calls[0].function.name
+            fn_args = eval(msg.tool_calls[0].function.arguments)
 
             tool_response = await self.deal_with_function_call(fn_name, fn_args)
 
