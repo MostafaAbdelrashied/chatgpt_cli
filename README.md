@@ -28,16 +28,20 @@ DB_NAME=
 4. Run the CLI
 ```bash
 poetry run chatgpt_cli
+poetry run chatgpt_cli --no-stream # default
+poetry run chatgpt_cli --stream
+poetry run chatgpt_cli --read_file <path_to_file>
 ```
 
-## Features
+## Roadmap
 - [x] Chat with different OpenAI models
 - [x] Store chat history in a PostgreSQL database
-- [x] Continue previous conversation
-- [x] Continue conversation with different models.
-- [x] Load big text file and chat with the model (Sometimes terminal has limited copy-paste buffer)
-- [x] Use different tools by utilizing function calling. Currently it connect to a dummy DB that has sales, costs, and profits. 
-- [ ] 
+- [x] Continue previous conversations, if needed
+- [x] Continue a conversation with different model than the one used initially
+- [x] Load big text file as attachment (Sometimes terminal has limited copy-paste buffer)
+- [x] Use different tools by utilizing function calling.
+- [x] Activate streaming mode for GPT-4 models. O1 is not supported yet.
+- [x] Chat using multiple tools at the same time. 
  
 
 ## License
