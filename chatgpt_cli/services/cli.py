@@ -101,12 +101,14 @@ class ChatService:
 
     async def chat_loop(self, chat: Chat, model_name: str):
         print(f"\nChatting with model: {model_name}. Type 'exit' to end the chat.\n")
-        conversation = [
-            {
-                "role": "system",
-                "content": "You are a helpful customer support assistant. You can use functions when needed.",
-            }
-        ]
+        conversation = []
+        if "o1" not in model_name:
+            conversation.append(
+                {
+                    "role": "system",
+                    "content": "You are a helpful customer support assistant. You can use functions when needed.",
+                }
+            )
 
         # Fetch messages without managing sessions here
         messages = await self.message_repository.get_messages_by_chat(chat.id)

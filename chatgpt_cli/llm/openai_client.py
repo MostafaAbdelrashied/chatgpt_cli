@@ -38,6 +38,12 @@ class OpenAIClient:
 
     async def call_openai(self, model_name: str, messages: List[Dict[str, str]]):
         # Include the tools in the request
+        if "o1" in model_name:
+            response = self.client.chat.completions.create(
+                model=model_name, messages=messages
+            )
+            return response
+
         response = self.client.chat.completions.create(
             model=model_name, messages=messages, functions=TOOLS, function_call="auto"
         )
@@ -58,7 +64,8 @@ class OpenAIClient:
         self, model_name: str, messages: List[Dict[str, str]]
     ) -> str:
         response = await self.call_openai(model_name, messages)
-
+        if "o1" in model_name:
+            return response.choices[0].message.content
         choice = response.choices[0]
         finish_reason = choice.finish_reason
         msg = choice.message
