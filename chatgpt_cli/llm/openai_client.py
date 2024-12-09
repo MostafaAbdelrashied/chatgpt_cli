@@ -45,7 +45,7 @@ class OpenAIClient:
         self, model_name: str, messages: List[Dict[str, str]], **kwargs
     ):
         response = self.client.chat.completions.create(
-            model=model_name, messages=messages, stream=self.stream, **kwargs
+            model=model_name, messages=messages, **kwargs
         )
         return response
 
@@ -63,14 +63,21 @@ class OpenAIClient:
     async def get_response(
         self, model_name: str, messages: List[Dict[str, str]]
     ) -> str:
+        if self.stream:
+            return await self.process_stream(model_name, messages)
+        return await self.get_complete_response(model_name, messages)
+
+    async def get_complete_response(
+        self, model_name: str, messages: List[Dict[str, str]]
+    ) -> str:
         if "o1" in model_name:
             response = await self.call_openai(model_name, messages)
             return response.choices[0].message.content
         response = await self.call_openai(
-            model_name, messages, tools=TOOLS, tool_choice="auto"
+            model_name, messages, tools=TOOLS, tool_choice="auto", stream=False
         )
         msg = response.choices[0].message
-
+        response_text = msg.content
         if response.choices[0].finish_reason == "tool_calls":
             for tool_call in msg.tool_calls:
                 fn_name = tool_call.function.name
@@ -87,6 +94,76 @@ class OpenAIClient:
                 )
 
             response = await self.call_openai(model_name, messages)
-            return response.choices[0].message.content
-        else:
-            return msg.content
+            response_text = response.choices[0].message.content
+
+        print(f"Assistant: {response_text}", end="\n\n", flush=True)
+        return response_text
+
+    async def process_stream(self, model_name: str, messages: List[Dict[str, str]]):
+        response_text = ""
+        tool_calls = []
+        stream_response = await self.call_openai(
+            model_name, messages, tools=TOOLS, tool_choice="auto", stream=True
+        )
+        print("Assistant: ", end="", flush=True)
+        for chunk in stream_response:
+            delta = chunk.choices[0].delta
+
+            if delta and delta.content:
+                print(delta.content, end="", flush=True)
+                response_text += delta.content
+
+            elif delta and delta.tool_calls:
+                tcchunklist = delta.tool_calls
+                for tcchunk in tcchunklist:
+                    if len(tool_calls) <= tcchunk.index:
+                        tool_calls.append(
+                            {
+                                "id": "",
+                                "type": "function",
+                                "function": {"name": "", "arguments": ""},
+                            }
+                        )
+                    tc = tool_calls[tcchunk.index]
+
+                    if tcchunk.id:
+                        tc["id"] += tcchunk.id
+                    if tcchunk.function.name:
+                        tc["function"]["name"] += tcchunk.function.name
+                    if tcchunk.function.arguments:
+                        tc["function"]["arguments"] += tcchunk.function.arguments
+
+        if tool_calls:
+            messages.append(
+                {
+                    "role": "assistant",
+                    "tool_calls": tool_calls,
+                }
+            )
+
+            for tool_call in tool_calls:
+                fn_name = tool_call["function"]["name"]
+                fn_args = json.loads(tool_call["function"]["arguments"])
+                tool_response = await self.deal_with_function_call(fn_name, fn_args)
+                
+                messages.append(
+                    {
+                        "role": "tool",
+                        "content": str(tool_response),
+                        "tool_call_id": tool_call["id"],
+                    }
+                )
+
+            stream = self.client.chat.completions.create(
+                model=model_name,
+                messages=messages,
+                stream=True,
+            )
+            response_text = ""
+            for chunk in stream:
+                stream_txt = chunk.choices[0].delta.content
+                if stream_txt is not None:
+                    print(chunk.choices[0].delta.content, end="", flush=True)
+                    response_text += stream_txt
+        print("\n")
+        return response_text

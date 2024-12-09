@@ -130,7 +130,6 @@ class ChatService:
             response_text = await self.openai.get_response(
                 model_name=model_name, messages=conversation
             )
-            print(f"Assistant: {response_text}", end="\n\n", flush=True)
             conversation.append({"role": "assistant", "content": response_text})
             message = Message(
                 chat_id=chat.id,
