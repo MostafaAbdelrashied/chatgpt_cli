@@ -1,6 +1,5 @@
 # ChatGPT CLI
 ![ChatGPT CLI](demo.gif)
-## add ypthon version, peotry, ruff
 ![Python Version](https://img.shields.io/badge/python-3.13-blue)
 ![Poetry Version](https://img.shields.io/badge/poetry-1.8.4-blue)
 ![Ruff Version](https://img.shields.io/badge/Ruff-0.8.1-blue)
