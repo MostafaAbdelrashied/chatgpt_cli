@@ -33,9 +33,11 @@ poetry run chatgpt_cli
 ## Features
 - [x] Chat with different OpenAI models
 - [x] Store chat history in a PostgreSQL database
-- [x] Continue previous conversations using different models
-- [x] Load big text file and chat with the model.
-- [x] Use different tools by utilizing function calling 
+- [x] Continue previous conversation
+- [x] Continue conversation with different models.
+- [x] Load big text file and chat with the model (Sometimes terminal has limited copy-paste buffer)
+- [x] Use different tools by utilizing function calling. Currently it connect to a dummy DB that has sales, costs, and profits. 
+- [ ] 
  
 
 ## License
