@@ -1,18 +1,24 @@
-import os
 from typing import Any, Dict, List
 
-import openai
+from openai import (
+    APIConnectionError,
+    APIError,
+    AuthenticationError,
+    OpenAI,
+    RateLimitError,
+)
 
 from chatgpt_cli.tools.tool_manager import TOOL_FUNCTIONS, TOOLS
+from chatgpt_cli.utils.config import settings
 
 
 class OpenAIClient:
     def __init__(self):
-        openai.api_key = os.environ.get("OPENAI_API_KEY")
+        self.client = OpenAI(api_key=settings.openai.api_key.get_secret_value())
 
     async def list_models(self) -> List[Any]:
         try:
-            models = openai.OpenAI().models.list().data
+            models = self.client.models.list().data
             models = [model for model in models if "bain" not in model.owned_by]
             filtered_models = [
                 model
@@ -20,19 +26,19 @@ class OpenAIClient:
                 if any(substr in model.id for substr in ["4o", "o1"])
             ]
             return filtered_models
-        except openai.AuthenticationError as e:
+        except AuthenticationError as e:
             print(f"Authentication failed: {e}. Check your API key.")
-        except openai.APIConnectionError as e:
+        except APIConnectionError as e:
             print(f"Network error: {e}. Check your internet connection.")
-        except openai.RateLimitError as e:
+        except RateLimitError as e:
             print(f"Rate limit exceeded: {e}")
-        except openai.APIError as e:
+        except APIError as e:
             print(f"OpenAI API error: {e}")
         return []
 
     async def call_openai(self, model_name: str, messages: List[Dict[str, str]]):
         # Include the tools in the request
-        response = openai.chat.completions.create(
+        response = self.client.chat.completions.create(
             model=model_name, messages=messages, functions=TOOLS, function_call="auto"
         )
         return response
