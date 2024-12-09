@@ -6,12 +6,11 @@ from chatgpt_cli.llm.openai_client import OpenAIClient
 
 
 class ChatService:
-    def __init__(self, read_file: str = None):
-        # Remove session from the initializer
+    def __init__(self, read_file: str = None, stream: bool = False):
         self.user_repository = UserRepository()
         self.chat_repository = ChatRepository()
         self.message_repository = MessageRepository()
-        self.openai = OpenAIClient()
+        self.openai = OpenAIClient(stream)
         self.read_file_content = (
             self.load_file_content(read_file) if read_file else None
         )
@@ -102,13 +101,6 @@ class ChatService:
     async def chat_loop(self, chat: Chat, model_name: str):
         print(f"\nChatting with model: {model_name}. Type 'exit' to end the chat.\n")
         conversation = []
-        if "o1" not in model_name:
-            conversation.append(
-                {
-                    "role": "system",
-                    "content": "You are a helpful customer support assistant. You can use functions when needed.",
-                }
-            )
 
         # Fetch messages without managing sessions here
         messages = await self.message_repository.get_messages_by_chat(chat.id)
